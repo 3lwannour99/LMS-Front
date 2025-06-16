@@ -34,7 +34,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   CardMedia,
-  TextField
+  TextField,
 } from "@mui/material";
 import {
   Book as BookOpen,
@@ -53,7 +53,7 @@ import {
   Quiz as QuizIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import ReactPlayer from 'react-player';
+import ReactPlayer from "react-player";
 
 const StudentDashboard = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -228,8 +228,10 @@ const StudentDashboard = () => {
       dueDate: "2025-06-18",
       status: "Submitted",
       grade: "85/100",
-      description: "Create a JavaScript application that demonstrates DOM manipulation and event handling.",
-      instructions: "Submit your project files in a zip format. Include a README with setup instructions.",
+      description:
+        "Create a JavaScript application that demonstrates DOM manipulation and event handling.",
+      instructions:
+        "Submit your project files in a zip format. Include a README with setup instructions.",
     },
     {
       id: 2,
@@ -239,7 +241,8 @@ const StudentDashboard = () => {
       status: "Pending",
       grade: "-",
       description: "Design a RESTful API using Node.js and Express.",
-      instructions: "Submit your code with proper documentation. Include test cases.",
+      instructions:
+        "Submit your code with proper documentation. Include test cases.",
     },
   ]);
 
@@ -291,12 +294,12 @@ const StudentDashboard = () => {
   const handleSubmitFile = () => {
     if (file) {
       console.log("Submitting file:", file.name);
-      
-      const updatedAssignments = assignments.map(a => 
+
+      const updatedAssignments = assignments.map((a) =>
         a.id === selectedAssignment.id ? { ...a, status: "Submitted" } : a
       );
       setAssignments(updatedAssignments);
-      
+
       handleCloseDialog();
     }
   };
@@ -328,10 +331,10 @@ const StudentDashboard = () => {
   const markLessonCompleted = () => {
     if (!currentLesson || !selectedCourse) return;
 
-    const updatedCourses = enrolledCourses.map(course => {
+    const updatedCourses = enrolledCourses.map((course) => {
       if (course.id === selectedCourse.id) {
-        const updatedModules = course.modules.map(module => {
-          const updatedLessons = module.lessons.map(lesson => {
+        const updatedModules = course.modules.map((module) => {
+          const updatedLessons = module.lessons.map((lesson) => {
             if (lesson.id === currentLesson.id) {
               return { ...lesson, completed: true, notes };
             }
@@ -339,33 +342,38 @@ const StudentDashboard = () => {
           });
           return { ...module, lessons: updatedLessons };
         });
-        
+
         // Update completed lessons count
         const completedCount = updatedModules.reduce((count, module) => {
-          return count + module.lessons.filter(l => l.completed).length;
+          return count + module.lessons.filter((l) => l.completed).length;
         }, 0);
-        
-        return { 
-          ...course, 
+
+        return {
+          ...course,
           modules: updatedModules,
           completedLessons: completedCount,
-          progress: Math.round((completedCount / course.totalLessons) * 100)
+          progress: Math.round((completedCount / course.totalLessons) * 100),
         };
       }
       return course;
     });
-    
+
     // In a real app, you would save to backend here
     console.log("Marked lesson as completed");
-    setSelectedCourse(updatedCourses.find(c => c.id === selectedCourse.id));
+    setSelectedCourse(updatedCourses.find((c) => c.id === selectedCourse.id));
   };
 
   const handleNotesChange = (e) => {
     setNotes(e.target.value);
   };
 
-  const StatCard = ({ title, value, icon: IconComponent, color = "primary" }) => (
-    <Card sx={{ minHeight: '100%', borderRadius: 2 }}>
+  const StatCard = ({
+    title,
+    value,
+    icon: IconComponent,
+    color = "primary",
+  }) => (
+    <Card sx={{ minHeight: "100%", borderRadius: 2 }}>
       <CardContent>
         <Box display="flex" alignItems="center" gap={2}>
           <Avatar sx={{ bgcolor: `${color}.light`, color: `${color}.dark` }}>
@@ -384,10 +392,10 @@ const StudentDashboard = () => {
     </Card>
   );
 
- if (selectedCourse) {
+  if (selectedCourse) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Button 
+        <Button
           startIcon={<Close />}
           onClick={handleBackToCourses}
           sx={{ mb: 3 }}
@@ -397,100 +405,87 @@ const StudentDashboard = () => {
         </Button>
 
         {/* Vertical Card Layout */}
-        <Box sx={{ 
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 3,
-          width: '90%',
-          mx: 'auto'
-        }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+            width: "90%",
+            mx: "auto",
+          }}
+        >
           {/* Course Info Card */}
           <Card sx={{ boxShadow: 3 }}>
-            <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }}>
-              <CardMedia
-                component="img"
-                height="240"
-                image={selectedCourse.thumbnail || "/images/course-placeholder.jpg"}
-                alt={selectedCourse.name}
-                sx={{ 
-                  width: { xs: '100%', md: '40%' },
-                  objectFit: 'cover'
-                }}
-              />
+            <Box display="flex" flexDirection={{ xs: "column", md: "row" }}>
               <Box sx={{ p: 3, flex: 1 }}>
                 <Typography variant="h4" fontWeight="bold" gutterBottom>
                   {selectedCourse.name}
                 </Typography>
-                
-                <Box display="flex" alignItems="center" mb={3}>
-                  <Avatar sx={{ width: 40, height: 40, mr: 2, bgcolor: 'primary.main' }}>
-                    {selectedCourse.instructor[0]}
-                  </Avatar>
-                  <Box>
-                    <Typography variant="body1" fontWeight="medium">
-                      {selectedCourse.instructor}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Instructor
-                    </Typography>
-                  </Box>
-                </Box>
-                
+
                 <Typography variant="body1" paragraph>
                   {selectedCourse.description}
                 </Typography>
-                
+
                 {/* Enhanced Progress Section */}
-                <Box sx={{ 
-                  backgroundColor: 'primary.light', 
-                  p: 3, 
-                  borderRadius: 2,
-                  mb: 2,
-                  borderLeft: '4px solid',
-                  borderColor: 'primary.main'
-                }}>
+                <Box
+                  sx={{
+                    backgroundColor: "primary.light",
+                    p: 3,
+                    borderRadius: 2,
+                    mb: 2,
+                    borderLeft: "4px solid",
+                    borderColor: "primary.main",
+                  }}
+                >
                   <Typography variant="h6" fontWeight="bold" gutterBottom>
                     Your Progress
                   </Typography>
                   <Box display="flex" alignItems="center" mb={2}>
-                    <Box sx={{ width: '100%', mr: 2 }}>
+                    <Box sx={{ width: "100%", mr: 2 }}>
                       <LinearProgress
                         variant="determinate"
                         value={selectedCourse.progress}
-                        sx={{ 
-                          height: 12, 
+                        sx={{
+                          height: 12,
                           borderRadius: 6,
-                          backgroundColor: 'primary.50'
+                          backgroundColor: "primary.50",
                         }}
                       />
                     </Box>
-                    <Typography variant="h5" fontWeight="bold" color="primary.dark">
+                    <Typography
+                      variant="h5"
+                      fontWeight="bold"
+                      color="primary.dark"
+                    >
                       {selectedCourse.progress}%
                     </Typography>
                   </Box>
                   <Typography variant="body1">
-                    Completed {selectedCourse.completedLessons} of {selectedCourse.totalLessons} lessons
+                    Completed {selectedCourse.completedLessons} of{" "}
+                    {selectedCourse.totalLessons} lessons
                   </Typography>
                 </Box>
-                
+
                 {/* Next Lesson Section */}
-                <Box sx={{ 
-                  backgroundColor: 'grey.50', 
-                  p: 3, 
-                  borderRadius: 2,
-                  borderLeft: '4px solid',
-                  borderColor: 'warning.main'
-                }}>
+                <Box
+                  sx={{
+                    backgroundColor: "grey.50",
+                    p: 3,
+                    borderRadius: 2,
+                    borderLeft: "4px solid",
+                    borderColor: "warning.main",
+                  }}
+                >
                   <Typography variant="h6" fontWeight="bold" gutterBottom>
                     Next Lesson
                   </Typography>
                   <Typography variant="body1" paragraph>
                     {selectedCourse.nextLesson}
                   </Typography>
-                  <Chip 
-                    label={`Due: ${selectedCourse.dueDate}`} 
+                  <Chip
+                    label={`Due: ${selectedCourse.dueDate}`}
                     color="warning"
-                    sx={{ fontWeight: 'bold' }}
+                    sx={{ fontWeight: "bold" }}
                   />
                 </Box>
               </Box>
@@ -501,36 +496,46 @@ const StudentDashboard = () => {
           <Card sx={{ boxShadow: 3 }}>
             <CardContent sx={{ p: 0 }}>
               {currentVideo ? (
-                <Box sx={{ 
-                  position: 'relative',
-                  paddingTop: '56.25%', // 16:9 aspect ratio
-                  backgroundColor: 'black'
-                }}>
+                <Box
+                  sx={{
+                    position: "relative",
+                    paddingTop: "56.25%", // 16:9 aspect ratio
+                    backgroundColor: "black",
+                  }}
+                >
                   <video
                     src={currentVideo}
                     controls
                     style={{
-                      position: 'absolute',
+                      position: "absolute",
                       top: 0,
                       left: 0,
-                      width: '100%',
-                      height: '100%'
+                      width: "100%",
+                      height: "100%",
                     }}
                     onEnded={markLessonCompleted}
                   />
                 </Box>
               ) : (
-                <Box 
-                  display="flex" 
+                <Box
+                  display="flex"
                   flexDirection="column"
-                  justifyContent="center" 
-                  alignItems="center" 
+                  justifyContent="center"
+                  alignItems="center"
                   minHeight="300px"
                   bgcolor="grey.100"
                   p={3}
                 >
-                  <VideoLibrary fontSize="large" color="disabled" sx={{ mb: 2, fontSize: 60 }} />
-                  <Typography variant="h6" color="text.secondary" align="center">
+                  <VideoLibrary
+                    fontSize="large"
+                    color="disabled"
+                    sx={{ mb: 2, fontSize: 60 }}
+                  />
+                  <Typography
+                    variant="h6"
+                    color="text.secondary"
+                    align="center"
+                  >
                     Select a lesson from the curriculum to start watching
                   </Typography>
                 </Box>
@@ -544,48 +549,52 @@ const StudentDashboard = () => {
               <Typography variant="h5" fontWeight="bold" mb={3}>
                 Course Curriculum
               </Typography>
-              
+
               {selectedCourse.modules.map((module, moduleIndex) => (
-                <Accordion 
-                  key={module.id} 
+                <Accordion
+                  key={module.id}
                   defaultExpanded={moduleIndex === 0}
-                  sx={{ 
+                  sx={{
                     mb: 2,
-                    '&:before': { display: 'none' },
-                    boxShadow: 'none',
-                    border: '1px solid',
-                    borderColor: 'divider',
-                    borderRadius: '8px !important'
+                    "&:before": { display: "none" },
+                    boxShadow: "none",
+                    border: "1px solid",
+                    borderColor: "divider",
+                    borderRadius: "8px !important",
                   }}
                 >
-                  <AccordionSummary 
+                  <AccordionSummary
                     expandIcon={<ExpandMore />}
                     sx={{
-                      backgroundColor: 'grey.50',
-                      borderRadius: moduleIndex === 0 ? '8px 8px 0 0' : '8px',
-                      '&.Mui-expanded': {
-                        borderRadius: '8px 8px 0 0'
-                      }
+                      backgroundColor: "grey.50",
+                      borderRadius: moduleIndex === 0 ? "8px 8px 0 0" : "8px",
+                      "&.Mui-expanded": {
+                        borderRadius: "8px 8px 0 0",
+                      },
                     }}
                   >
-                    <Typography variant="h6" fontWeight="medium">{module.title}</Typography>
+                    <Typography variant="h6" fontWeight="medium">
+                      {module.title}
+                    </Typography>
                   </AccordionSummary>
                   <AccordionDetails sx={{ p: 0 }}>
                     <TableContainer>
                       <Table size="small">
                         <TableBody>
                           {module.lessons.map((lesson) => (
-                            <TableRow 
+                            <TableRow
                               key={lesson.id}
                               hover
                               selected={currentLesson?.id === lesson.id}
                               onClick={() => handleVideoSelect(lesson)}
-                              sx={{ cursor: 'pointer' }}
+                              sx={{ cursor: "pointer" }}
                             >
                               <TableCell sx={{ width: 50, pl: 3 }}>
-                                <PlayCircle 
-                                  fontSize="medium" 
-                                  color={lesson.completed ? "success" : "primary"} 
+                                <PlayCircle
+                                  fontSize="medium"
+                                  color={
+                                    lesson.completed ? "success" : "primary"
+                                  }
                                 />
                               </TableCell>
                               <TableCell>
@@ -594,22 +603,25 @@ const StudentDashboard = () => {
                                 </Typography>
                               </TableCell>
                               <TableCell sx={{ width: 100 }}>
-                                <Typography variant="body2" color="text.secondary">
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                >
                                   {lesson.duration}
                                 </Typography>
                               </TableCell>
                               <TableCell sx={{ width: 60 }}>
                                 {lesson.completed ? (
-                                  <Chip 
-                                    label="Completed" 
-                                    size="small" 
+                                  <Chip
+                                    label="Completed"
+                                    size="small"
                                     color="success"
                                     variant="outlined"
                                   />
                                 ) : (
-                                  <Chip 
-                                    label="Pending" 
-                                    size="small" 
+                                  <Chip
+                                    label="Pending"
+                                    size="small"
                                     color="warning"
                                     variant="outlined"
                                   />
@@ -630,11 +642,16 @@ const StudentDashboard = () => {
           {currentLesson && (
             <Card sx={{ boxShadow: 3 }}>
               <CardContent>
-                <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mb={3}
+                >
                   <Typography variant="h5" fontWeight="bold">
                     {currentLesson.title}
                   </Typography>
-                  <Button 
+                  <Button
                     variant={currentLesson.completed ? "contained" : "outlined"}
                     color={currentLesson.completed ? "success" : "primary"}
                     size="large"
@@ -643,47 +660,6 @@ const StudentDashboard = () => {
                     sx={{ borderRadius: 2 }}
                   >
                     {currentLesson.completed ? "Completed" : "Mark as Complete"}
-                  </Button>
-                </Box>
-                
-                <Box sx={{ 
-                  backgroundColor: 'grey.50', 
-                  p: 3, 
-                  borderRadius: 2, 
-                  mb: 3,
-                  borderLeft: '4px solid',
-                  borderColor: 'primary.main'
-                }}>
-                  <Typography variant="h6" fontWeight="bold" color="text.secondary" gutterBottom>
-                    Lesson Notes
-                  </Typography>
-                  <Typography variant="body1" paragraph>
-                    {currentLesson.notes || "No notes available for this lesson."}
-                  </Typography>
-                </Box>
-                
-                <Typography variant="h6" fontWeight="bold" color="text.secondary" gutterBottom>
-                  Your Personal Notes
-                </Typography>
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={6}
-                  variant="outlined"
-                  value={notes}
-                  onChange={handleNotesChange}
-                  placeholder="Write your notes here..."
-                  sx={{ mb: 3 }}
-                />
-                <Box display="flex" justifyContent="flex-end">
-                  <Button 
-                    variant="contained" 
-                    color="primary"
-                    size="large"
-                    onClick={() => console.log("Notes saved:", notes)}
-                    sx={{ borderRadius: 2 }}
-                  >
-                    Save Notes
                   </Button>
                 </Box>
               </CardContent>
@@ -699,11 +675,19 @@ const StudentDashboard = () => {
       {/* Header Section */}
       <Box mb={4}>
         <Box display="flex" alignItems="center" gap={3} mb={4}>
-          <Avatar 
-            src={student.avatar} 
-            sx={{ width: 80, height: 80, fontSize: '2rem', bgcolor: 'primary.main' }}
+          <Avatar
+            src={student.avatar}
+            sx={{
+              width: 80,
+              height: 80,
+              fontSize: "2rem",
+              bgcolor: "primary.main",
+            }}
           >
-            {student.name.split(' ').map(n => n[0]).join('')}
+            {student.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")}
           </Avatar>
           <Box>
             <Typography variant="h4" fontWeight="bold">
@@ -718,33 +702,33 @@ const StudentDashboard = () => {
         {/* Stats Cards */}
         <Grid container spacing={3} mb={4}>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard 
-              title="Enrolled Courses" 
-              value={student.enrolledCourses} 
+            <StatCard
+              title="Enrolled Courses"
+              value={student.enrolledCourses}
               icon={BookOpen}
               color="primary"
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard 
-              title="Completed" 
-              value={student.completedCourses} 
+            <StatCard
+              title="Completed"
+              value={student.completedCourses}
               icon={Award}
               color="success"
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard 
-              title="Certificates" 
-              value={student.certificatesEarned} 
+            <StatCard
+              title="Certificates"
+              value={student.certificatesEarned}
               icon={Star}
               color="warning"
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard 
-              title="Study Streak" 
-              value={`${student.studyStreak} days`} 
+            <StatCard
+              title="Study Streak"
+              value={`${student.studyStreak} days`}
               icon={TrendingUp}
               color="info"
             />
@@ -754,8 +738,8 @@ const StudentDashboard = () => {
 
       {/* Tabs Section */}
       <Paper sx={{ borderRadius: 2, mb: 4 }}>
-        <Tabs 
-          value={selectedTab} 
+        <Tabs
+          value={selectedTab}
           onChange={handleTabChange}
           variant="scrollable"
           scrollButtons="auto"
@@ -772,8 +756,8 @@ const StudentDashboard = () => {
         <Grid container spacing={3}>
           {enrolledCourses.map((course) => (
             <Grid item xs={12} md={6} key={course.id}>
-              <Card 
-                sx={{ height: '100%', borderRadius: 2, cursor: 'pointer' }}
+              <Card
+                sx={{ height: "100%", borderRadius: 2, cursor: "pointer" }}
                 onClick={() => handleCourseClick(course)}
               >
                 <CardContent>
@@ -787,7 +771,8 @@ const StudentDashboard = () => {
                   <Box mb={3}>
                     <Box display="flex" justifyContent="space-between" mb={1}>
                       <Typography variant="body2">
-                        Progress: {course.completedLessons}/{course.totalLessons} lessons
+                        Progress: {course.completedLessons}/
+                        {course.totalLessons} lessons
                       </Typography>
                       <Typography fontWeight="bold" color="primary.main">
                         {course.progress}%
@@ -800,7 +785,11 @@ const StudentDashboard = () => {
                     />
                   </Box>
 
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
                     <Box>
                       <Typography variant="body2" color="text.secondary">
                         Next: {course.nextLesson}
@@ -853,24 +842,30 @@ const StudentDashboard = () => {
                       <TableCell>{assignment.course}</TableCell>
                       <TableCell>{assignment.dueDate}</TableCell>
                       <TableCell>
-                        <Chip 
-                          label={assignment.status} 
-                          color={assignment.status === 'Submitted' ? 'success' : 'warning'}
+                        <Chip
+                          label={assignment.status}
+                          color={
+                            assignment.status === "Submitted"
+                              ? "success"
+                              : "warning"
+                          }
                           size="small"
                         />
                       </TableCell>
                       <TableCell>{assignment.grade}</TableCell>
                       <TableCell>
-                        <Button 
-                          size="small" 
+                        <Button
+                          size="small"
                           variant="outlined"
-                          onClick={() => 
-                            assignment.status === 'Submitted' 
-                              ? handleViewAssignment(assignment) 
+                          onClick={() =>
+                            assignment.status === "Submitted"
+                              ? handleViewAssignment(assignment)
                               : handleSubmitAssignment(assignment)
                           }
                         >
-                          {assignment.status === 'Submitted' ? 'View' : 'Submit'}
+                          {assignment.status === "Submitted"
+                            ? "View"
+                            : "Submit"}
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -906,19 +901,27 @@ const StudentDashboard = () => {
                       <TableCell>{quiz.course}</TableCell>
                       <TableCell>{quiz.dateTaken}</TableCell>
                       <TableCell>
-                        {quiz.score === 'Pending' ? (
+                        {quiz.score === "Pending" ? (
                           <Chip label="Pending" color="warning" size="small" />
                         ) : (
-                          <Chip label={quiz.score} color="success" size="small" />
+                          <Chip
+                            label={quiz.score}
+                            color="success"
+                            size="small"
+                          />
                         )}
                       </TableCell>
                       <TableCell>
-                        <Button 
-                          size="small" 
+                        <Button
+                          size="small"
                           variant="outlined"
-                          onClick={() => quiz.score === 'Pending' ? handleTakeQuiz(quiz.id) : null}
+                          onClick={() =>
+                            quiz.score === "Pending"
+                              ? handleTakeQuiz(quiz.id)
+                              : null
+                          }
                         >
-                          {quiz.score === 'Pending' ? 'Take Quiz' : 'Review'}
+                          {quiz.score === "Pending" ? "Take Quiz" : "Review"}
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -966,14 +969,19 @@ const StudentDashboard = () => {
       )}
 
       {/* Assignment Dialog */}
-      <Dialog open={openAssignmentDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
+      <Dialog
+        open={openAssignmentDialog}
+        onClose={handleCloseDialog}
+        maxWidth="md"
+        fullWidth
+      >
         <DialogTitle>
           {selectedAssignment?.title}
           <IconButton
             aria-label="close"
             onClick={handleCloseDialog}
             sx={{
-              position: 'absolute',
+              position: "absolute",
               right: 8,
               top: 8,
               color: (theme) => theme.palette.grey[500],
@@ -983,9 +991,11 @@ const StudentDashboard = () => {
           </IconButton>
         </DialogTitle>
         <DialogContent dividers>
-          {selectedAssignment?.status === 'Submitted' ? (
+          {selectedAssignment?.status === "Submitted" ? (
             <>
-              <Typography variant="h6" gutterBottom>Assignment Details</Typography>
+              <Typography variant="h6" gutterBottom>
+                Assignment Details
+              </Typography>
               <Typography variant="body1" paragraph>
                 <strong>Course:</strong> {selectedAssignment?.course}
               </Typography>
@@ -993,10 +1003,11 @@ const StudentDashboard = () => {
                 <strong>Due Date:</strong> {selectedAssignment?.dueDate}
               </Typography>
               <Typography variant="body1" paragraph>
-                <strong>Status:</strong> <Chip 
-                  label={selectedAssignment?.status} 
-                  color="success" 
-                  size="small" 
+                <strong>Status:</strong>{" "}
+                <Chip
+                  label={selectedAssignment?.status}
+                  color="success"
+                  size="small"
                 />
               </Typography>
               <Typography variant="body1" paragraph>
@@ -1006,12 +1017,15 @@ const StudentDashboard = () => {
                 <strong>Description:</strong> {selectedAssignment?.description}
               </Typography>
               <Typography variant="body1">
-                <strong>Instructions:</strong> {selectedAssignment?.instructions}
+                <strong>Instructions:</strong>{" "}
+                {selectedAssignment?.instructions}
               </Typography>
             </>
           ) : (
             <>
-              <Typography variant="h6" gutterBottom>Submit Assignment</Typography>
+              <Typography variant="h6" gutterBottom>
+                Submit Assignment
+              </Typography>
               <Typography variant="body1" paragraph>
                 <strong>Course:</strong> {selectedAssignment?.course}
               </Typography>
@@ -1022,15 +1036,16 @@ const StudentDashboard = () => {
                 <strong>Description:</strong> {selectedAssignment?.description}
               </Typography>
               <Typography variant="body1" paragraph>
-                <strong>Instructions:</strong> {selectedAssignment?.instructions}
+                <strong>Instructions:</strong>{" "}
+                {selectedAssignment?.instructions}
               </Typography>
-              
+
               <Box mt={3}>
                 <Input
                   type="file"
                   id="assignment-upload"
                   onChange={handleFileChange}
-                  style={{ display: 'none' }}
+                  style={{ display: "none" }}
                 />
                 <label htmlFor="assignment-upload">
                   <Button
@@ -1052,10 +1067,10 @@ const StudentDashboard = () => {
           )}
         </DialogContent>
         <DialogActions>
-          {selectedAssignment?.status === 'Pending' && (
-            <Button 
-              onClick={handleSubmitFile} 
-              variant="contained" 
+          {selectedAssignment?.status === "Pending" && (
+            <Button
+              onClick={handleSubmitFile}
+              variant="contained"
               color="primary"
               disabled={!file}
             >
