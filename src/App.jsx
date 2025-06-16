@@ -12,14 +12,13 @@ import {
 } from "@mui/material";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import StudentDashboard from "./dashboard/StudentDashboard";
 import InstructorDashboard from "./dashboard/InstructorDashboard";
 import AdminDashboard from "./dashboard/AdminDashboard";
 import CourseManagement from "./components/CourseManagement";
 import QuizPage from "./components/QuizPage";
 import MyProfile from "./components/MyProfile";
 import SettingsPage from "./auth/SettingsPage";
-
+import StudentDashboard from "./dashboard/student Dashboard/StudentDashboard";
 import "./App.css";
 
 function App() {
