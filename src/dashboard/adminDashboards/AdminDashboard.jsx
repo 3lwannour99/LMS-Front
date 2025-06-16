@@ -27,10 +27,9 @@ const AdminDashboard = () => {
   
   // Mock Data for admin
   const admin = {
-    name: "Admin User",
+    name: "Admin Osama",
     email: "admin@edusystem.com",
     avatar: "",
-    joinDate: "January 2023",
     totalUsers: 1245,
     pendingCourses: 8,
     activeInstructors: 42,
@@ -55,9 +54,6 @@ const AdminDashboard = () => {
           <Box>
             <Typography variant="h4" fontWeight="bold">
               Welcome, {admin.name}
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              System Administrator since {admin.joinDate}
             </Typography>
           </Box>
         </Box>
